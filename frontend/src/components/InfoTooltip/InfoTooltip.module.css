@@ -1,0 +1,34 @@
+.popup__container-regist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  max-width: 358px;
+  max-height: 330px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  position: relative;
+}
+
+.title__registr {
+  margin: 0;
+  margin-bottom: 60px;
+  font-family: "Inter";
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  color: #000;
+  text-align: center;
+}
+
+.popup__registr-img {
+  margin: 0;
+  margin-top: 60px;
+  object-fit: cover;
+  overflow: hidden;
+  width: 120px;
+  height: 120px;
+}

@@ -1,0 +1,5 @@
+.card__list {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 21px 0 20px;
+}
