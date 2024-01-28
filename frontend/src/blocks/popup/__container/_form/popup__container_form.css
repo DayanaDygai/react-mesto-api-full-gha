@@ -1,9 +1,0 @@
-.popup__container_form {
-  width: 430px;
-}
-
-@media screen and (max-width: 767px) {
-  .popup__container_form {
-    width: 282px;
-  }
-}

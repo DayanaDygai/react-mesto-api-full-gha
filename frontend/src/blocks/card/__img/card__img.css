@@ -1,9 +1,0 @@
-.card__img {
-  overflow: hidden;
-  box-sizing: content-box;
-  object-fit: cover;
-  display: block;
-  height: 282px;
-  padding: 0;
-  margin: 0;
-}
