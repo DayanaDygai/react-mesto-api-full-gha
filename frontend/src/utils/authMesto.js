@@ -36,7 +36,7 @@ export const authorize = (password, email) => {
   }).then((res) => getResponseData(res));
 };
 
-export const getContent = () => {
+export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     credentials: "include",
@@ -44,7 +44,8 @@ export const getContent = () => {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       'Content-Type': 'application/json',
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",
+      Authorization: `Bearer ${token}`,
     },
   }).then((res) => getResponseData(res));
 };
