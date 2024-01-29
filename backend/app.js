@@ -23,7 +23,7 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-app.use(cookieParser());
+
 app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'http://localhost:3000'], credentials: true }));
 
 app.get('/crash-test', () => {
@@ -34,6 +34,7 @@ app.get('/crash-test', () => {
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
