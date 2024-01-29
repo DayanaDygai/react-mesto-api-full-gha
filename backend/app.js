@@ -1,6 +1,8 @@
 /* eslint-disable import/extensions */
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { errors } from 'celebrate';
 
@@ -14,11 +16,14 @@ import NotFoundError from './errors/NotFoundError.js';
 
 import { requestLogger, errorLogger } from './middleware/logger.js';
 
+
 dotenv.config();
 
 // eslint-disable-next-line import/first
 
 const app = express();
+app.use(cookieParser())
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru'], credentials: true, maxAge: 120 }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(express.json());

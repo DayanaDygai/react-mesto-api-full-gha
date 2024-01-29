@@ -1,4 +1,4 @@
-export const BASE_URL = "https://auth.nomoreparties.co";
+export const BASE_URL = "'https://daianamesto.students.nomoredomainsmonster.ru'";
 
 const getResponseData = (res) => {
   if (!res.ok) {
