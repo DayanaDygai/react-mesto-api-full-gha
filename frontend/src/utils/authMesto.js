@@ -12,7 +12,11 @@ export const register = (password, email) => {
     method: "POST",
     credentials: "include",
     headers: {
-      'Content-Type': 'application/json'
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
+      
     },
     body: JSON.stringify({ password, email }),
   }).then((res) => getResponseData(res));
@@ -23,7 +27,10 @@ export const authorize = (password, email) => {
     method: "POST",
     credentials: "include",
     headers: {
-      'Content-Type': 'application/json'
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
     },
     body: JSON.stringify({ password, email }),
   }).then((res) => getResponseData(res));
@@ -34,7 +41,10 @@ export const getContent = () => {
     method: "GET",
     credentials: "include",
     headers: {
-      'Content-Type': 'application/json'
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
     },
   }).then((res) => getResponseData(res));
 };
