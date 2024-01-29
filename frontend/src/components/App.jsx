@@ -57,19 +57,6 @@ function App() {
    
   }, [loggedIn]);
 
-  //функция проверки токена пользователя
-  const auth = async (token) => {
-    return authMesto.getContent(token).then((res) => {
-      if (res) {
-        setLoggedIn(true);
-        setCurrentUser({
-          email: res.data.email,
-          _id: res.data._id,
-        });
-      }
-    }).catch((error) => console.log(`ошибка: ${error}`));
-  };
-
   //сохраняем токен в локальном хранилище
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -82,6 +69,21 @@ function App() {
   useEffect(() => {
     if (loggedIn) navigate("/");
   }, [loggedIn, navigate]);
+
+  // функция проверки токена пользователя
+  const auth = async (token) => {
+    return authMesto.getContent(token).then((res) => {
+      if (res) {
+        setLoggedIn(true);
+        setCurrentUser({
+          email: res.data.email,
+          _id: res.data._id,
+        });
+      }
+    }).catch((error) => console.log(`ошибка: ${error}`));
+  };
+
+  
 
   //функция регистрации пользователя
   const onRegister = ({ password, email }) => {

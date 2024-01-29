@@ -27,6 +27,13 @@ export const authorize = (password, email) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ password, email }),
+  }).then((data) => {
+    if (data._id) {
+      localStorage.setItem('userId', data._id);
+      return data;
+    } else {
+      return;
+    }
   }).then((res) => getResponseData(res));
 };
 
@@ -36,7 +43,7 @@ export const getContent = (token) => {
     credentials: "include",
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      // Authorization: `Bearer ${token}`,
     },
   }).then((res) => getResponseData(res));
 };
