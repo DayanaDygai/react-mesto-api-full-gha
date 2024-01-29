@@ -24,7 +24,7 @@ dotenv.config();
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru'], credentials: true, maxAge: 120 }));
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'http://localhost:3000'], credentials: true }));
 
 app.get('/crash-test', () => {
   setTimeout(() => {
