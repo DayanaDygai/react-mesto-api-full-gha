@@ -18,15 +18,13 @@ import NotFoundError from './errors/NotFoundError.js';
 
 import { requestLogger, errorLogger } from './middleware/logger.js';
 
-import optionsCors from './middleware/cors.js';
-
 dotenv.config();
 
 // eslint-disable-next-line import/first
 
 const app = express();
 
-app.use(cors(optionsCors));
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'http://localhost:3000'], credentials: true }));
 
 app.get('/crash-test', () => {
   setTimeout(() => {
