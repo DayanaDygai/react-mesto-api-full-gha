@@ -1,4 +1,4 @@
-export const BASE_URL = "'https://daianamesto.students.nomoredomainsmonster.ru'";
+export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster.ru";
 
 const getResponseData = (res) => {
   if (!res.ok) {

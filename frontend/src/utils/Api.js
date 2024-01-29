@@ -97,7 +97,7 @@ export class Api {
 }
 
 const api = new Api({
-  url: "'https://daianamesto.students.nomoredomainsmonster.ru",
+  url: "https://api.daianamesto.students.nomoredomainsmonster.ru",
   headers: {
     'Content-Type': 'application/json'
   },
