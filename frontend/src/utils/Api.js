@@ -97,7 +97,7 @@ export class Api {
 }
 
 const api = new Api({
-  url: "https://mesto.nomoreparties.co/v1/cohort-76",
+  url: "'https://daianamesto.students.nomoredomainsmonster.ru",
   headers: {
     authorization: "eda5b0b1-35bd-4b47-92b2-3de2fac0e53a",
     "Content-Type": "application/json",
