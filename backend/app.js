@@ -40,7 +40,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('api/', router);
+app.use('/', router);
 
 app.use(errorLogger);
 
