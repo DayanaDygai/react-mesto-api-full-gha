@@ -37,14 +37,22 @@ export const authorize = (password, email) => {
   }).then((res) => getResponseData(res));
 };
 
-export const getContent = (token) => {
+export const getContent = () => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     credentials: "include",
     headers: {
       'Content-Type': 'application/json',
-      // Authorization: `Bearer ${token}`,
     },
   }).then((res) => getResponseData(res));
 };
 
+export const onLogout = () => {
+  return fetch(`${BASE_URL}/logout`, {
+    method: 'POST',
+    credentials: "include",
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }).then((res) => getResponseData(res));
+}

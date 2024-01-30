@@ -59,10 +59,10 @@ function App() {
 
   //сохраняем токен в локальном хранилище
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
-    if (localStorage.getItem("token")) {
-      auth(token);
+    if (localStorage.getItem("userId")) {
+      auth(userId);
     }
   }, []);
 
@@ -86,9 +86,10 @@ function App() {
   
 
   //функция регистрации пользователя
-  const onRegister = ({ password, email }) => {
+  const onRegister = ( email, password ) => {
+    if (password && email) {
     return authMesto
-      .register(password, email)
+      .register(email, password)
       .then((res) => {
         setIsTooltipStatus("successfully");
         setIsTooltipOpened(true);
@@ -106,7 +107,7 @@ function App() {
           setIsTooltipStatus("");
         }, 2000);
       });
-  };
+  } };
 
   //функция для входа пользователя
   const onLogin = ({ password, email }) => {
@@ -134,15 +135,23 @@ function App() {
 
   //функция для выхода пользователя из приложения
   const onSignOut = () => {
-    localStorage.removeItem("token");
-    setLoggedIn(false);
-    navigate("/sign-in");
+    return authMesto
+    .onLogout().then((res) => {
+      if (res) {
+        localStorage.removeItem('userId');
+        setLoggedIn(false);
+        navigate('/sign-in', { replace: true });
+      }
+    })
+      .catch(err => {
+        console.error('Ошибка на стороне сервера:', err);
+      });
   };
 
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api

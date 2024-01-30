@@ -26,12 +26,7 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'localhost:3000'],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru'], credentials: true, maxAge: 60 }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(express.json());
@@ -55,4 +50,4 @@ app.use('*', (req, res, next) => next(new NotFoundError('Страница не �
 
 app.use(handlerError);
 
-app.listen(3000);
+app.listen(3001);

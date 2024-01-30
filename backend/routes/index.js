@@ -7,7 +7,7 @@ import userRouter from './users.js';
 import cardRouter from './cards.js';
 // eslint-disable-next-line import/extensions
 
-import { login, createUser } from '../controllers/users.js';
+import { login, createUser, logout } from '../controllers/users.js';
 
 // eslint-disable-next-line import/order
 import { celebrate, Joi } from 'celebrate';
@@ -36,6 +36,8 @@ router.post('/signup', celebrate({
     password: Joi.string().required().min(8),
   }),
 }), createUser);
+
+router.post('/logout', logout);
 
 router.use(auth);
 router.use('/users', userRouter);
