@@ -16,7 +16,7 @@ import auth from './middleware/auth.js';
 
 import handlerError from './middleware/handlerError.js';
 
-import NotFoundError from './errors/NotFoundError.js';
+// import NotFoundError from './errors/NotFoundError.js';
 
 import { requestLogger, errorLogger } from './middleware/logger.js';
 // import cookieParser from 'cookie-parser';
@@ -26,7 +26,7 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru'], credentials: true, maxAge: 60 }));
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster'], credentials: true, maxAge: 60 }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(bodyParser.json());
@@ -44,13 +44,13 @@ app.get('/crash-test', () => {
   }, 0);
 });
 // eslint-disable-next-line comma-spacing
-app.use(router);
+app.use('/', router);
 
 app.use(errorLogger);
 
 app.use(errors());
 
-app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
+// app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
 
 app.use(handlerError);
 
