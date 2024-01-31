@@ -7,7 +7,7 @@ const getResponseData = (res) => {
   return res.json();
 } 
 
-export const register = (password, email) => {
+export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
     credentials: "include",
@@ -15,18 +15,19 @@ export const register = (password, email) => {
       'Content-Type': 'application/json',
       
     },
-    body: JSON.stringify({ password, email }),
+    body: JSON.stringify({ email, password }),
   }).then((res) => getResponseData(res));
 };
 
-export const authorize = (password, email) => {
+export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     credentials: "include",
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ password, email }),
+    body: JSON.stringify({password: password,
+      email: email, }),
   }).then((data) => {
     if (data._id) {
       localStorage.setItem('userId', data._id);
