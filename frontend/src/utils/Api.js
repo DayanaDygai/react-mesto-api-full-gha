@@ -18,7 +18,6 @@ export class Api {
   //изменение информации о пользователе с сервера
   setUserInfo(data) {
     return this._makeRequest(`${this._url}/users/me`, {
-      credentials: "include",
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
@@ -32,7 +31,6 @@ export class Api {
   //получение информации о пользователе с сервера
   getUserInfo() {
     return this._makeRequest(`${this._url}/users/me`, {
-      credentials: "include",
       method: "GET",
       headers: this._headers,
     });
@@ -41,7 +39,6 @@ export class Api {
   //редактировать аватар
   editAvatar(data) {
     return this._makeRequest(`${this._url}/users/me/avatar`, {
-      credentials: "include",
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
@@ -55,7 +52,6 @@ export class Api {
   //метод получения карточек с сервера
   getAllCards() {
     return this._makeRequest(`${this._url}/cards`, {
-      credentials: "include",
       method: "GET",
       headers: this._headers,
     });
@@ -64,7 +60,6 @@ export class Api {
   //добавление новой карточки
   createCard(data) {
     return this._makeRequest(`${this._url}/cards`, {
-      credentials: "include",
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({
@@ -77,7 +72,6 @@ export class Api {
   //удаление карточки
   delete(id) {
     return this._makeRequest(`${this._url}/cards/${id}`, {
-      credentials: "include",
       method: "DELETE",
       headers: this._headers,
     });
@@ -85,7 +79,6 @@ export class Api {
 
   deleteLike(id) {
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
-      credentials: "include",
       method: "DELETE",
       headers: this._headers,
     });
@@ -93,7 +86,6 @@ export class Api {
 
   addLike(id) {
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
-      credentials: "include",
       method: "PUT",
       headers: this._headers,
     });
@@ -105,9 +97,10 @@ export class Api {
 }
 
 const api = new Api({
-  url: "https://api.daianamesto.students.nomoredomainsmonster.ru",
+  url: "https://api.daianamesto.students.nomoredomainsmonster.ru/",
   headers: {
-    'Content-Type': 'application/json'
+    authorization: "eda5b0b1-35bd-4b47-92b2-3de2fac0e53a",
+    "Content-Type": "application/json",
   },
 });
 

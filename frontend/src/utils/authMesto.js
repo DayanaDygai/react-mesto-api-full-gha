@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster.ru";
+export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster.ru/";
 
 const getResponseData = (res) => {
   if (!res.ok) {
@@ -7,53 +7,36 @@ const getResponseData = (res) => {
   return res.json();
 } 
 
-export const register = (email, password) => {
+export const register = (password, email) => {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
-    credentials: "include",
     headers: {
-      'Content-Type': 'application/json',
-      
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ password, email }),
   }).then((res) => getResponseData(res));
 };
 
-export const authorize = (email, password) => {
+export const authorize = (password, email) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
-    credentials: "include",
     headers: {
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({password: password,
-      email: email, }),
-  }).then((data) => {
-    if (data._id) {
-      localStorage.setItem('userId', data._id);
-      return data;
-    } else {
-      return;
-    }
+    body: JSON.stringify({ password, email }),
   }).then((res) => getResponseData(res));
 };
 
-export const getContent = () => {
+export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
-    credentials: "include",
     headers: {
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   }).then((res) => getResponseData(res));
 };
 
-export const onLogout = () => {
-  return fetch(`${BASE_URL}/logout`, {
-    method: 'POST',
-    credentials: "include",
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  }).then((res) => getResponseData(res));
-}

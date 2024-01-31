@@ -57,20 +57,7 @@ function App() {
    
   }, [loggedIn]);
 
-  //сохраняем токен в локальном хранилище
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-
-    if (localStorage.getItem("userId")) {
-      auth(userId);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (loggedIn) navigate("/");
-  }, [loggedIn, navigate]);
-
-  // функция проверки токена пользователя
+  //функция проверки токена пользователя
   const auth = async (token) => {
     return authMesto.getContent(token).then((res) => {
       if (res) {
@@ -83,13 +70,23 @@ function App() {
     }).catch((error) => console.log(`ошибка: ${error}`));
   };
 
-  
+  //сохраняем токен в локальном хранилище
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (localStorage.getItem("token")) {
+      auth(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn) navigate("/");
+  }, [loggedIn, navigate]);
 
   //функция регистрации пользователя
-  const onRegister = ( email, password ) => {
-    if (password && email) {
+  const onRegister = ({ password, email }) => {
     return authMesto
-      .register(email, password)
+      .register(password, email)
       .then((res) => {
         setIsTooltipStatus("successfully");
         setIsTooltipOpened(true);
@@ -107,7 +104,7 @@ function App() {
           setIsTooltipStatus("");
         }, 2000);
       });
-  } };
+  };
 
   //функция для входа пользователя
   const onLogin = ({ password, email }) => {
@@ -135,23 +132,15 @@ function App() {
 
   //функция для выхода пользователя из приложения
   const onSignOut = () => {
-    return authMesto
-    .onLogout().then((res) => {
-      if (res) {
-        localStorage.removeItem('userId');
-        setLoggedIn(false);
-        navigate('/sign-in', { replace: true });
-      }
-    })
-      .catch(err => {
-        console.error('Ошибка на стороне сервера:', err);
-      });
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    navigate("/sign-in");
   };
 
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((id) => id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
