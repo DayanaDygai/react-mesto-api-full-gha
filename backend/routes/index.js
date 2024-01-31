@@ -12,7 +12,7 @@ import { login, createUser } from '../controllers/users.js';
 // eslint-disable-next-line import/order
 import { celebrate, Joi } from 'celebrate';
 
-import auth from '../middleware/auth.js';
+// import auth from '../middleware/auth.js';
 
 import validateUrl from '../utils/constants.js';
 
@@ -37,7 +37,7 @@ router.post('/signup', celebrate({
   }),
 }), createUser);
 
-router.use(auth);
+// router.use(auth);
 router.use('/users', userRouter);
 router.use('/cards', cardRouter);
 

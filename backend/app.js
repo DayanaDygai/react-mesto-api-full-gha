@@ -12,6 +12,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import router from './routes/index.js';
+import auth from './middleware/auth.js';
 
 import handlerError from './middleware/handlerError.js';
 
@@ -35,8 +36,9 @@ app.use(cookieParser());
 // app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
+app.use(auth);
 // eslint-disable-next-line comma-spacing
-app.use('api/',router);
+app.use(router);
 
 app.use(errorLogger);
 
