@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 import router from './routes/index.js';
 import auth from './middleware/auth.js';
 
@@ -37,7 +37,7 @@ app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
@@ -69,7 +69,7 @@ app.post('/signin', celebrate({
 
 // eslint-disable-next-line comma-spacing
 app.use(auth);
-app.use('api/', router);
+app.use(router);
 
 app.use(errorLogger);
 
@@ -79,4 +79,4 @@ app.use(errors());
 
 app.use(handlerError);
 
-app.listen(3001);
+app.listen(3000);

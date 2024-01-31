@@ -23,6 +23,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [email, setEmail] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipOpened, setIsTooltipOpened] = useState(false);
   const [isTooltipStatus, setIsTooltipStatus] = useState("");
@@ -72,8 +73,7 @@ function App() {
 
 
   useEffect(() => {
-    const token = localStorage.getItem("userId");
-    if (token) {
+    if (loggedIn === true) {
     api 
     .getUserInfo()
       .then(([currentUser, cards]) => {
@@ -84,40 +84,35 @@ function App() {
   }}, [ loggedIn])
   //сохраняем токен в локальном хранилище
   useEffect(() => {
-    const token = localStorage.getItem("userId");
-    if (token) {
-      authMesto
-      .getContent()
-      .then((res) => {
-        setCurrentUser({
-          email: res.email,
-          _id: res._id,
-        });
-        setLoggedIn(true);
-        navigate("/")
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      authMesto.getContent(jwt).then((res) => {
+          if (res) {
+              setLoggedIn(true);
+              setEmail(res.email);
+          }
       })
       .catch((error) => {
-        localStorage.removeItem("userId");
+        localStorage.removeItem("jwt");
         console.log(error);
       })
-
-
     }
-  }, [navigate]);
+  }, []);
 
-  // useEffect(() => {
-  //   if (loggedIn) navigate("/");
-  // }, [loggedIn, navigate]);
+  useEffect(() => {
+    if (loggedIn) navigate("/");
+  }, [loggedIn, navigate]);
 
   //функция регистрации пользователя
-  const onRegister = (password, email) => {
-    return authMesto
-      .register(password, email)
+  const onRegister = (email, password) => {
+      authMesto
+      .register({email, password})
       .then((res) => {
+        setEmail(res.email);
         setIsTooltipStatus("successfully");
         setIsTooltipOpened(true);
-        navigate("/sign-in", { replace: true });
-        return res;
+        navigate("/sign-in");
+        // return res;
       })
       .catch((error) => {
         console.log(`ошибка: ${error}`);
@@ -133,15 +128,16 @@ function App() {
   };
 
   //функция для входа пользователя
-  const onLogin = (password, email) => {
+  const onLogin = (email, password) => {
     return authMesto
-      .authorize(password, email)
+      .authorize(email, password)
       .then((res) => {
-        if (res.token) {
+        localStorage.setItem("jwt", res.token);
+          setEmail(email);
           setLoggedIn(true);
           localStorage.setItem("userId");
           navigate("/", { replace: true });
-        }
+        
       })
       .catch((error) => {
         console.log(`ошибка: ${error}`);
@@ -158,7 +154,7 @@ function App() {
 
   //функция для выхода пользователя из приложения
   const onSignOut = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("jwt");
     setLoggedIn(false);
     navigate("/sign-in");
   };
@@ -273,10 +269,10 @@ function App() {
             }
           />
           <Route
-            path="sign-up"
+            path="/sign-up"
             element={<Register onRegister={onRegister} />}
           />
-          <Route path="sign-in" element={<Login onLogin={onLogin} />} />
+          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
         </Routes>
 
         <Footer />

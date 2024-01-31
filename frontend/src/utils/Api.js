@@ -109,7 +109,7 @@ export class Api {
 const api = new Api({
   url:"https://api.daianamesto.students.nomoredomainsmonster.ru",
   headers: {
-    // authorization: `Bearer ${token}`,
+    'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
     "Content-Type": "application/json",
   },
 });
