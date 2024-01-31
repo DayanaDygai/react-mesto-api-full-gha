@@ -37,8 +37,6 @@ router.post('/signup', celebrate({
   }),
 }), createUser);
 
-router.post('/logout', logout);
-
 router.use(auth);
 router.use('/users', userRouter);
 router.use('/cards', cardRouter);
