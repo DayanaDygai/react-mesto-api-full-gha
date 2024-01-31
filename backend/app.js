@@ -32,7 +32,7 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-app.use(cors({ origin: 'https://daianamesto.students.nomoredomainsmonster.ru', credentials: true, maxAge: 60 }));
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://localhost:3000'], credentials: true, maxAge: 360 }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(bodyParser.json());
@@ -70,7 +70,7 @@ app.post('/signin', celebrate({
 }), login);
 
 // eslint-disable-next-line comma-spacing
-app.use('/', router);
+app.use(router);
 
 app.use(errorLogger);
 

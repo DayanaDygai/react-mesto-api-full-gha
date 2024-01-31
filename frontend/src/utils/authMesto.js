@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster";
+export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster.ru";
 
 const getResponseData = (res) => {
   if (!res.ok) {
@@ -7,41 +7,44 @@ const getResponseData = (res) => {
   return res.json();
 } 
 
-export const register = async (email, password) => {
-  const res = await fetch(`${BASE_URL}/signup`, {
+export const register = (email, password) => {
+  return fetch(`${BASE_URL}/signup`, {
     method: "POST",
     credentials: "include",
     headers: {
+      'Accept': "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  });
-  return getResponseData(res);
+  }).then((res) => getResponseData(res));
 };
 
-export const authorize = async (email, password) => {
-  const res = await fetch(`${BASE_URL}/signin`, {
+export const authorize = (email, password) => {
+  return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     credentials: "include",
     headers: {
+      'Accept': "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  });
-  const data = await getResponseData(res);
-  localStorage.setItem('userId', data._id);
-  return data;
+  }).then(getResponseData)
+    .then((data) => {
+      localStorage.setItem('userId', data._id)
+      return data;
+    });
 };
 
-export const getContent = async () => {
+export const getContent = () => {
   // const token = localStorage.getItem('jwt');
-  const res = await fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${BASE_URL}/users/me`, {
     credentials: "include",
     method: "GET",
     headers: {
+      'Accept': "application/json",
       "Content-Type": "application/json",
+      // Authorization: `Bearer ${token}`,
     },
-  });
-  return getResponseData(res);
+  }).then((res) => getResponseData(res));
 };
 

@@ -133,13 +133,13 @@ function App() {
   };
 
   //функция для входа пользователя
-  const onLogin = ({ password, email }) => {
+  const onLogin = (password, email) => {
     return authMesto
       .authorize(password, email)
       .then((res) => {
         if (res.token) {
           setLoggedIn(true);
-          localStorage.setItem("token", res.token);
+          localStorage.setItem("userId");
           navigate("/", { replace: true });
         }
       })
@@ -273,10 +273,10 @@ function App() {
             }
           />
           <Route
-            path="/sign-up"
+            path="sign-up"
             element={<Register onRegister={onRegister} />}
           />
-          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+          <Route path="sign-in" element={<Login onLogin={onLogin} />} />
         </Routes>
 
         <Footer />
