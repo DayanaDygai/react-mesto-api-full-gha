@@ -37,6 +37,12 @@ app.use(cookieParser());
 app.use(requestLogger);
 
 app.use(auth);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 // eslint-disable-next-line comma-spacing
 app.use(router);
 
