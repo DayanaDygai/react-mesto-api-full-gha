@@ -3,7 +3,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { errors } from 'celebrate';
+import { errors, celebrate, Joi } from 'celebrate';
 
 import dotenv from 'dotenv';
 
@@ -19,6 +19,12 @@ import handlerError from './middleware/handlerError.js';
 // import NotFoundError from './errors/NotFoundError.js';
 
 import { requestLogger, errorLogger } from './middleware/logger.js';
+
+import { login, createUser } from './controllers/users.js';
+
+// eslint-disable-next-line import/order
+
+import validateUrl from './utils/constants.js';
 // import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -26,7 +32,7 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru'], credentials: true, maxAge: 60 }));
+app.use(cors({ origin: 'https://daianamesto.students.nomoredomainsmonster.ru', credentials: true, maxAge: 60 }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(bodyParser.json());
@@ -43,6 +49,26 @@ app.get('/crash-test', () => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(
+      validateUrl,
+    ),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), createUser);
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
+
 // eslint-disable-next-line comma-spacing
 app.use('/', router);
 
