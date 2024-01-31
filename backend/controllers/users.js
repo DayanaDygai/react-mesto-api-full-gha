@@ -85,13 +85,7 @@ export const createUser = async (req, res, next) => {
       about: req.body.about,
       avatar: req.body.avatar,
     });
-    return res.status(STATUS_OK_CREATED).send({
-      _id: newUser._id,
-      name: newUser.name,
-      about: newUser.about,
-      avatar: newUser.avatar,
-      email: newUser.email,
-    });
+    return res.status(STATUS_OK_CREATED).send(newUser);
   } catch (error) {
     if (error.code === MONGO_DUPLICATE_ERROR_CODE) {
       return next(new ConflictError('Такой пользователь уже существует'));
@@ -111,7 +105,7 @@ export const editInfoUser = async (req, res, next) => {
       { name, about },
       { new: true, runValidators: true },
     ).orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send({ name: user.name, about: user.about });
+    return res.status(STATUS_OK).send(user);
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь не найден'));
@@ -149,7 +143,7 @@ export const getMyProfile = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-    return res.status(STATUS_OK).send({ data: user });
+    return res.status(STATUS_OK).send(user);
   } catch (error) {
     return next(error);
   }

@@ -28,60 +28,86 @@ function App() {
   const [isTooltipStatus, setIsTooltipStatus] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (loggedIn) {
-      api
-        .getUserInfo()
-        .then((res) => {
-          setCurrentUser((prevState) => ({
-            ...prevState,
-            name: res.name,
-            avatar: res.avatar,
-            _id: res._id,
-            about: res.about,
-          }));
-        })
-        .catch((error) => console.log(`ошибка: ${error}`));
-    }
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     api
+  //       .getUserInfo()
+  //       .then((res) => {
+  //         setCurrentUser((prevState) => ({
+  //           ...prevState,
+  //           name: res.name,
+  //           avatar: res.avatar,
+  //           _id: res._id,
+  //           about: res.about,
+  //         }));
+  //       })
+  //       .catch((error) => console.log(`ошибка: ${error}`));
+  //   }
+  // }, [loggedIn]);
 
-  useEffect(() => {
-    if (loggedIn) {
-      api
-      .getAllCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((error) => console.log(`ошибка: ${error}`));
-    }
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     api
+  //     .getAllCards()
+  //     .then((data) => {
+  //       setCards(data);
+  //     })
+  //     .catch((error) => console.log(`ошибка: ${error}`));
+  //   }
    
-  }, [loggedIn]);
+  // }, [loggedIn]);
 
   //функция проверки токена пользователя
-  const auth = async (token) => {
-    return authMesto.getContent(token).then((res) => {
-      if (res) {
-        setLoggedIn(true);
-        setCurrentUser({
-          email: res.data.email,
-          _id: res.data._id,
-        });
-      }
-    }).catch((error) => console.log(`ошибка: ${error}`));
-  };
+  // const auth = async (token) => {
+  //   return authMesto.getContent(token).then((res) => {
+  //     if (res) {
+  //       setLoggedIn(true);
+  //       setCurrentUser({
+  //         email: res.data.email,
+  //         _id: res.data._id,
+  //       });
+  //     }
+  //   }).catch((error) => console.log(`ошибка: ${error}`));
+  // };
 
+
+  useEffect(() => {
+    const token = localStorage.getItem("userId");
+    if (token) {
+    api 
+    .getUserInfo()
+      .then(([currentUser, cards]) => {
+        setCurrentUser(currentUser);
+        setCards(cards);
+      })
+      .catch((error) => console.log(`ошибка: ${error}`));
+  }}, [ loggedIn])
   //сохраняем токен в локальном хранилище
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userId");
+    if (token) {
+      authMesto
+      .getContent()
+      .then((res) => {
+        setCurrentUser({
+          email: res.email,
+          _id: res._id,
+        });
+        setLoggedIn(true);
+        navigate("/")
+      })
+      .catch((error) => {
+        localStorage.removeItem("userId");
+        console.log(error);
+      })
 
-    if (localStorage.getItem("token")) {
-      auth(token);
+
     }
-  }, []);
+  }, [navigate]);
 
-  useEffect(() => {
-    if (loggedIn) navigate("/");
-  }, [loggedIn, navigate]);
+  // useEffect(() => {
+  //   if (loggedIn) navigate("/");
+  // }, [loggedIn, navigate]);
 
   //функция регистрации пользователя
   const onRegister = ({ password, email }) => {
@@ -140,7 +166,7 @@ function App() {
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api

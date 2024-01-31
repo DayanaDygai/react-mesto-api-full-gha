@@ -96,10 +96,12 @@ export class Api {
   }
 }
 
+const token = localStorage.getItem('jwt');
+
 const api = new Api({
-  url: "https://api.daianamesto.students.nomoredomainsmonster.ru/",
+  url: "https://api.daianamesto.students.nomoredomainsmonster.ru",
   headers: {
-    authorization: "eda5b0b1-35bd-4b47-92b2-3de2fac0e53a",
+    authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   },
 });

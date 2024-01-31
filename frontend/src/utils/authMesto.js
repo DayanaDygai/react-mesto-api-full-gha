@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster.ru/";
+export const BASE_URL = "https://api.daianamesto.students.nomoredomainsmonster.ru";
 
 const getResponseData = (res) => {
   if (!res.ok) {
@@ -26,10 +26,15 @@ export const authorize = (password, email) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ password, email }),
-  }).then((res) => getResponseData(res));
+  }).then(getResponseData)
+    .then((data) => {
+      localStorage.setItem('jwt', data.token)
+      return data;
+    });
 };
 
-export const getContent = (token) => {
+export const getContent = () => {
+  const token = localStorage.getItem('jwt');
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {

@@ -31,15 +31,14 @@ import NotAuthenticateError from '../errors/NotAuthenticateError.js';
 const { NODE_ENV, JWT_SECRET } = process.env;
 // eslint-disable-next-line func-names
 const auth = (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization.startWith('Bearer')) {
+    return next(NotAuthenticateError('Необходимо авторизоваться'));
+  }
+  const token = authorization.split('Bearer')[1];
   let payload;
   try {
-    const token = req.headers.authorization;
-    if (!token) {
-      throw new NotAuthenticateError('Необходимо авторизоваться');
-    }
-    const validToken = token.replace('Bearer ', '');
-
-    payload = jwt.verify(validToken, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (error) {
     if (error.mesage === 'NotAuthanticate') {
       throw new NotAuthenticateError('Необходимо авторизоваться');
