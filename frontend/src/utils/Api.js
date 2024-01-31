@@ -107,7 +107,7 @@ export class Api {
 // const token = localStorage.getItem('jwt');
 
 const api = new Api({
-  url:"https://api.daianamesto.students.nomoredomainsmonster",
+  url:"https://api.daianamesto.students.nomoredomainsmonster.ru",
   headers: {
     // authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
