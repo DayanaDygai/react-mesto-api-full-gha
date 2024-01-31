@@ -7,7 +7,7 @@ import userRouter from './users.js';
 import cardRouter from './cards.js';
 // eslint-disable-next-line import/extensions
 
-import { login, createUser, logout } from '../controllers/users.js';
+import { login, createUser } from '../controllers/users.js';
 
 // eslint-disable-next-line import/order
 import { celebrate, Joi } from 'celebrate';
