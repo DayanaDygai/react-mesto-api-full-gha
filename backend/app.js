@@ -26,7 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-app.use(router);
+// eslint-disable-next-line comma-spacing
+app.use('api/',router);
 
 app.use(errorLogger);
 
