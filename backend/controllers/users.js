@@ -28,6 +28,24 @@ const STATUS_OK_CREATED = 201;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 const SOLT_ROUND = 10;
 
+// export const login = async (req, res, next) => {
+//   try {
+//     const { email, password } = req.body;
+//     const user = await User.findOne({ email }).select('+password');
+//     if (!user) {
+//       throw new NotAuthenticateError('Не верные логин или пароль');
+//     }
+//     const matched = await bcrypt.compare(password, user.password);
+//     if (!matched) {
+//       throw new NotAuthenticateError('Не верные логин или пароль');
+//     }
+//     const token = generateToken({ _id: user._id });
+//     return res.status(STATUS_OK).send({ token });
+//   } catch (error) {
+//     return next(error);
+//   }
+// };
+
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -40,7 +58,11 @@ export const login = async (req, res, next) => {
       throw new NotAuthenticateError('Не верные логин или пароль');
     }
     const token = generateToken({ _id: user._id });
-    return res.status(STATUS_OK).send({ token });
+    return res.cookie('jwt', token, {
+      maxAge: 3600000,
+      httpOnly: true,
+      sameSite: true,
+    }).send(user.toJSON());
   } catch (error) {
     return next(error);
   }

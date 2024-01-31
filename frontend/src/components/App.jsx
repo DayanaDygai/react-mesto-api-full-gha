@@ -110,7 +110,7 @@ function App() {
   // }, [loggedIn, navigate]);
 
   //функция регистрации пользователя
-  const onRegister = ({ password, email }) => {
+  const onRegister = (password, email) => {
     return authMesto
       .register(password, email)
       .then((res) => {

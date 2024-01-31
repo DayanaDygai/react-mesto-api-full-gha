@@ -7,41 +7,44 @@ const getResponseData = (res) => {
   return res.json();
 } 
 
-export const register = (password, email) => {
-  return fetch(`${BASE_URL}/signup`, {
+export const register = async (email, password) => {
+  const res = await fetch(`${BASE_URL}/signup`, {
     method: "POST",
+    credentials: "include",
     headers: {
-      Accept: "application/json",
+      'Accept': "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ password, email }),
-  }).then((res) => getResponseData(res));
+    body: JSON.stringify({ email, password }),
+  });
+  return getResponseData(res);
 };
 
-export const authorize = (password, email) => {
-  return fetch(`${BASE_URL}/signin`, {
+export const authorize = async (email, password) => {
+  const res = await fetch(`${BASE_URL}/signin`, {
     method: "POST",
+    credentials: "include",
     headers: {
-      Accept: "application/json",
+      'Accept': "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ password, email }),
-  }).then(getResponseData)
-    .then((data) => {
-      localStorage.setItem('jwt', data.token)
-      return data;
-    });
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await getResponseData(res);
+  localStorage.setItem('userId', data._id);
+  return data;
 };
 
-export const getContent = () => {
-  const token = localStorage.getItem('jwt');
-  return fetch(`${BASE_URL}/users/me`, {
+export const getContent = async () => {
+  // const token = localStorage.getItem('jwt');
+  const res = await fetch(`${BASE_URL}/users/me`, {
+    credentials: "include",
     method: "GET",
     headers: {
-      Accept: "application/json",
+      'Accept': "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
-  }).then((res) => getResponseData(res));
+  });
+  return getResponseData(res);
 };
 

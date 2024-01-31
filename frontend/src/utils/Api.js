@@ -19,6 +19,7 @@ export class Api {
   setUserInfo(data) {
     return this._makeRequest(`${this._url}/users/me`, {
       method: "PATCH",
+      credentials: "include",
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -32,6 +33,7 @@ export class Api {
   getUserInfo() {
     return this._makeRequest(`${this._url}/users/me`, {
       method: "GET",
+      credentials: "include",
       headers: this._headers,
     });
   }
@@ -40,6 +42,7 @@ export class Api {
   editAvatar(data) {
     return this._makeRequest(`${this._url}/users/me/avatar`, {
       method: "PATCH",
+      credentials: "include",
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -53,6 +56,7 @@ export class Api {
   getAllCards() {
     return this._makeRequest(`${this._url}/cards`, {
       method: "GET",
+      credentials: "include",
       headers: this._headers,
     });
   }
@@ -61,6 +65,7 @@ export class Api {
   createCard(data) {
     return this._makeRequest(`${this._url}/cards`, {
       method: "POST",
+      credentials: "include",
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -73,6 +78,7 @@ export class Api {
   delete(id) {
     return this._makeRequest(`${this._url}/cards/${id}`, {
       method: "DELETE",
+      credentials: "include",
       headers: this._headers,
     });
   }
@@ -80,6 +86,7 @@ export class Api {
   deleteLike(id) {
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
       method: "DELETE",
+      credentials: "include",
       headers: this._headers,
     });
   }
@@ -87,6 +94,7 @@ export class Api {
   addLike(id) {
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
       method: "PUT",
+      credentials: "include",
       headers: this._headers,
     });
   }
@@ -96,12 +104,12 @@ export class Api {
   }
 }
 
-const token = localStorage.getItem('jwt');
+// const token = localStorage.getItem('jwt');
 
 const api = new Api({
-  url: "https://api.daianamesto.students.nomoredomainsmonster.ru",
+  url:"https://api.daianamesto.students.nomoredomainsmonster.ru",
   headers: {
-    authorization: `Bearer ${token}`,
+    // authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   },
 });
