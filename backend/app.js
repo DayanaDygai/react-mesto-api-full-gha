@@ -26,7 +26,7 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster'], credentials: true, maxAge: 60 }));
+app.use(cors({ origin: ['https://daianamesto.students.nomoredomainsmonster.ru'], credentials: true, maxAge: 60 }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(bodyParser.json());
