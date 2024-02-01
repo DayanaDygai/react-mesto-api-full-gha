@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import cors from 'cors';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { errors } from 'celebrate';
 
@@ -26,16 +26,17 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'localhost:3000'],
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'localhost:3000'],
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+app.use(cors);
+app.use(express.json());
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
-app.use(express.json());
-app.use(cookieParser());
+
+// app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
@@ -45,7 +46,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('api/', router);
+app.use('/', router);
 
 app.use(errorLogger);
 
