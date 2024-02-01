@@ -16,16 +16,25 @@ const STATUS_OK_CREATED = 201;
 export const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
-    return res.status(STATUS_OK).send({ cards });
+    return res.status(STATUS_OK).send(cards);
   } catch (error) {
     return next(error);
   }
 };
 
 export const createCard = async (req, res, next) => {
+  const { name, link } = req.body;
+  const owner = req.user._id;
+
   try {
-    const card = await Card.create({ ...req.body, owner: req.user._id });
-    return res.status(STATUS_OK_CREATED).send(card);
+    const card = await Card.create({ name, link, owner });
+    return res.status(STATUS_OK_CREATED).send({
+      _id: card._id,
+      name: card.name,
+      link: card.link,
+      owner: card.owner,
+      likes: card.likes,
+    });
   } catch (error) {
     if (error.name === 'ValidationError') {
       return next(new IncorrectDataError('Переданны некорректные данны'));
@@ -44,8 +53,8 @@ export const deleteCardById = async (req, res, next) => {
     if (card.owner.toString() !== req.user._id) {
       throw new ForibiddenError('Нет прав для удаления карточки');
     }
-    await Card.deleteOne({ _id: cardId });
-    return res.status(STATUS_OK).send(card);
+    await Card.deleteOne(req.params);
+    return res.status(STATUS_OK).send({ message: 'Карточка успешно удалена' });
   } catch (error) {
     if (error.name === 'CastError') {
       return next(new IncorrectDataError('Указан некорретный ID'));
@@ -82,7 +91,7 @@ export const deleteLikeCard = async (req, res, next) => {
       { $pull: { likes: req.user._id } },
       { new: true },
     ).orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send({ card });
+    return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь по указанному ID не найден'));

@@ -1,7 +1,6 @@
 export class Api {
   constructor({ url, headers }) {
     this._url = url;
-    this._headers = headers;
     this.changeLikeCardStatus = this.changeLikeCardStatus.bind(this);
   }
 
@@ -16,86 +15,112 @@ export class Api {
   }
 
   //изменение информации о пользователе с сервера
-  setUserInfo(data) {
+  setUserInfo(name, about) {
+    const token =localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/users/me`, {
       credentials: "include",
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        name: data.name,
-        about: data.about,
-        avatar: data.avatar,
+        name,
+        about
       }),
     });
   }
 
   //получение информации о пользователе с сервера
   getUserInfo() {
+    const token =localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/users/me`, {
       credentials: "include",
       method: "GET",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     });
   }
 
   //редактировать аватар
-  editAvatar(data) {
+  editAvatar(avatarUrl) {
+    const token =localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/users/me/avatar`, {
       credentials: "include",
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        name: data.name,
-        about: data.about,
-        avatar: data.avatar,
+        avatar: avatarUrl,
       }),
     });
   }
 
   //метод получения карточек с сервера
   getAllCards() {
+    const token =localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/cards`, {
       credentials: "include",
       method: "GET",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     });
   }
 
   //добавление новой карточки
-  createCard(data) {
+  createCard({name, link}) {
+    const token =localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/cards`, {
       credentials: "include",
       method: "POST",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        name: data.name,
-        link: data.link,
+        name: name,
+        link: link,
       }),
     });
   }
 
   //удаление карточки
   delete(id) {
+    const token = localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/cards/${id}`, {
       credentials: "include",
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
     });
   }
 
   deleteLike(id) {
+    const token = localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
       credentials: "include",
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     });
   }
 
   addLike(id) {
+    const token = localStorage.getItem('jwt');
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
       credentials: "include",
       method: "PUT",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     });
   }
 
@@ -106,9 +131,9 @@ export class Api {
 
 const api = new Api({
   url: "https://api.daianamesto.students.nomoredomainsmonster.ru",
-  headers: {
-    'Content-Type': 'application/json'
-  },
+  // headers: {
+  //   'Content-Type': 'application/json'
+  // },
 });
 
 export default api;

@@ -1,8 +1,8 @@
 /* eslint-disable import/extensions */
 import express from 'express';
 import mongoose from 'mongoose';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import cors from 'cors';
+// eslint-disable-next-line import/no-extraneous-dependencies, import/order
+import cors from './middleware/cors.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import cookieParser from 'cookie-parser';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -25,16 +25,11 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-// const corsOptions = {
-//   origin: ['https://daianamesto.students.nomoredomainsmonster.ru', 'http://daianamesto.students.nomoredomainsmonster.ru', 'localhost:3000'],
-//   credentials: true,
-// };
-
+app.use(requestLogger);
 app.use(cors);
 app.use(express.json());
-
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 // app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -46,13 +41,13 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('/', router);
+app.use(router);
+
+app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
 
 app.use(errorLogger);
 
 app.use(errors());
-
-app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
 
 app.use(handlerError);
 

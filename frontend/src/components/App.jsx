@@ -10,6 +10,7 @@ import Login from "./Login/Login.jsx";
 import Register from "./Register/Register.jsx";
 import api from "../utils/Api";
 import * as authMesto from "../utils/authMesto.js";
+import {getContent} from "../utils/authMesto.js";
 import { CurrentUserContext } from "../context/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -22,6 +23,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
+  const [isEmail, setEmail] = useState("");
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipOpened, setIsTooltipOpened] = useState(false);
@@ -32,14 +34,8 @@ function App() {
     if (loggedIn) {
       api
         .getUserInfo()
-        .then((res) => {
-          setCurrentUser((prevState) => ({
-            ...prevState,
-            name: res.name,
-            avatar: res.avatar,
-            _id: res._id,
-            about: res.about,
-          }));
+        .then((userData) => {
+          setCurrentUser(userData);
         })
         .catch((error) => console.log(`ошибка: ${error}`));
     }
@@ -61,7 +57,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (localStorage.getItem("token")) {
+    if (token) {
       auth(token);
     }
   }, []);
@@ -75,25 +71,26 @@ function App() {
     return authMesto.getContent(token).then((res) => {
       if (res) {
         setLoggedIn(true);
-        setCurrentUser({
-          email: res.data.email,
-          _id: res.data._id,
-        });
+        setEmail(res.email);
       }
-    }).catch((error) => console.log(`ошибка: ${error}`));
+    }).catch((error) => {
+      localStorage.removeItem('jwt');
+      console.log(`ошибка: ${error}`)});
   };
 
   
 
   //функция регистрации пользователя
-  const onRegister = ({ password, email }) => {
+  const onRegister = (email, password) => {
     return authMesto
-      .register(password, email)
+      .register(email, password)
       .then((res) => {
-        setIsTooltipStatus("successfully");
-        setIsTooltipOpened(true);
-        navigate("/sign-in", { replace: true });
-        return res;
+        if (res) {
+          setIsTooltipStatus("successfully");
+          setIsTooltipOpened(true);
+          navigate("/sign-in");
+        }
+        // return res;
       })
       .catch((error) => {
         console.log(`ошибка: ${error}`);
@@ -109,32 +106,33 @@ function App() {
   };
 
   //функция для входа пользователя
-  const onLogin = ({ password, email }) => {
-    return authMesto
-      .authorize(password, email)
-      .then((res) => {
+  const onLogin = async (email, password) => {
+      try {
+        const res = await authMesto
+          .authorize(email, password);
         if (res.token) {
+          getContent(res.token);
           setLoggedIn(true);
+          setEmail(email);
           localStorage.setItem("token", res.token);
-          navigate("/", { replace: true });
+          navigate("/");
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(`ошибка: ${error}`);
         setIsTooltipOpened(true);
         setIsTooltipStatus("error");
-      })
-      .finally(() => {
-        setIsTooltipOpened(false);
-        setTimeout(function () {
-          setIsTooltipStatus("");
-        }, 2000);
-      });
+      }
+    finally {
+      setIsTooltipOpened(false);
+      setTimeout(function () {
+        setIsTooltipStatus("");
+      }, 2000);
+    }
   };
 
   //функция для выхода пользователя из приложения
   const onSignOut = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("jwt");
     setLoggedIn(false);
     navigate("/sign-in");
   };
@@ -142,7 +140,7 @@ function App() {
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
@@ -188,7 +186,7 @@ function App() {
   //функция для изменения информации о пользователе
   const handleUpdateUser = ({ name, about }) => {
     api
-      .setUserInfo({ name, about })
+      .setUserInfo(name, about)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
@@ -201,16 +199,16 @@ function App() {
     api
       .editAvatar(avatar)
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser({ ...currentUser, avatar: res.avatar });
         closeAllPopups();
       })
       .catch((error) => console.log(`ошибка: ${error}`));
   };
 
   //функция для добавления новой карточке
-  const handleUpdateCard = (data) => {
+  const handleUpdateCard = ({ name, link }) => {
     api
-      .createCard(data)
+      .createCard({ name, link })
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -230,7 +228,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header userEmail={currentUser.email} onSignOut={onSignOut} />
+        <Header userEmail={isEmail} onSignOut={onSignOut} />
         <Routes>
           <Route
             path="/"

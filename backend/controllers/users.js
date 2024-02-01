@@ -61,7 +61,7 @@ export const getUserById = async (req, res, next) => {
     const user = await User.findById(userId).orFail(
       () => new Error('NotFoundError'),
     );
-    return res.status(STATUS_OK).send({ data: user });
+    return res.status(STATUS_OK).send(user);
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь с данным ID не найден'));
@@ -86,7 +86,6 @@ export const createUser = async (req, res, next) => {
       avatar: req.body.avatar,
     });
     return res.status(STATUS_OK_CREATED).send({
-      _id: newUser._id,
       name: newUser.name,
       about: newUser.about,
       avatar: newUser.avatar,
@@ -111,7 +110,7 @@ export const editInfoUser = async (req, res, next) => {
       { name, about },
       { new: true, runValidators: true },
     ).orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send({ name: user.name, about: user.about });
+    return res.status(STATUS_OK).send(user);
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь не найден'));
@@ -130,7 +129,7 @@ export const editAvatarUser = async (req, res, next) => {
       { avatar: req.body.avatar },
       { new: 'true', runValidators: true },
     ).orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send({ avatar: user.avatar });
+    return res.status(STATUS_OK).send(user);
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь не найден'));
@@ -149,7 +148,13 @@ export const getMyProfile = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-    return res.status(STATUS_OK).send({ data: user });
+    return res.status(STATUS_OK).send({
+      name: user.name,
+      email: user.email,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user._id,
+    });
   } catch (error) {
     return next(error);
   }
