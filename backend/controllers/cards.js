@@ -15,8 +15,8 @@ const STATUS_OK_CREATED = 201;
 
 export const getCards = async (req, res, next) => {
   try {
-    const cards = await Card.find({}).populate(['likes', 'owner']);
-    return res.status(STATUS_OK).send(cards);
+    const cards = await Card.find({});
+    return res.status(STATUS_OK).send({ cards });
   } catch (error) {
     return next(error);
   }
@@ -37,14 +37,14 @@ export const createCard = async (req, res, next) => {
 export const deleteCardById = async (req, res, next) => {
   try {
     const { cardId } = req.params;
-    const card = await Card.findById(cardId).populate(['likes', 'owner']);
+    const card = await Card.findById(cardId);
     if (!card) {
       throw new NotFoundError('Карточки с указанным ID не существует');
     }
     if (card.owner.toString() !== req.user._id) {
       throw new ForibiddenError('Нет прав для удаления карточки');
     }
-    await Card.deleteOne(cardId);
+    await Card.deleteOne({ _id: cardId });
     return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.name === 'CastError') {
@@ -61,7 +61,7 @@ export const likeCard = async (req, res, next) => {
       cardId,
       { $addToSet: { likes: req.user._id } },
       { new: true },
-    ).populate(['likes', 'owner']).orFail(() => new Error('NotFoundError'));
+    ).orFail(() => new Error('NotFoundError'));
     return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.message === 'NotFoundError') {
@@ -81,8 +81,8 @@ export const deleteLikeCard = async (req, res, next) => {
       cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
-    ).populate('likes').orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send(card);
+    ).orFail(() => new Error('NotFoundError'));
+    return res.status(STATUS_OK).send({ card });
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь по указанному ID не найден'));

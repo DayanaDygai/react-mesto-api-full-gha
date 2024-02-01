@@ -23,79 +23,46 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [email, setEmail] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipOpened, setIsTooltipOpened] = useState(false);
   const [isTooltipStatus, setIsTooltipStatus] = useState("");
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     api
-  //       .getUserInfo()
-  //       .then((res) => {
-  //         setCurrentUser((prevState) => ({
-  //           ...prevState,
-  //           name: res.name,
-  //           avatar: res.avatar,
-  //           _id: res._id,
-  //           about: res.about,
-  //         }));
-  //       })
-  //       .catch((error) => console.log(`ошибка: ${error}`));
-  //   }
-  // }, [loggedIn]);
-
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     api
-  //     .getAllCards()
-  //     .then((data) => {
-  //       setCards(data);
-  //     })
-  //     .catch((error) => console.log(`ошибка: ${error}`));
-  //   }
-   
-  // }, [loggedIn]);
-
-  //функция проверки токена пользователя
-  // const auth = async (token) => {
-  //   return authMesto.getContent(token).then((res) => {
-  //     if (res) {
-  //       setLoggedIn(true);
-  //       setCurrentUser({
-  //         email: res.data.email,
-  //         _id: res.data._id,
-  //       });
-  //     }
-  //   }).catch((error) => console.log(`ошибка: ${error}`));
-  // };
-
+  useEffect(() => {
+    if (loggedIn) {
+      api
+        .getUserInfo()
+        .then((res) => {
+          setCurrentUser((prevState) => ({
+            ...prevState,
+            name: res.name,
+            avatar: res.avatar,
+            _id: res._id,
+            about: res.about,
+          }));
+        })
+        .catch((error) => console.log(`ошибка: ${error}`));
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
-    if (loggedIn === true) {
-    api 
-    .getUserInfo()
-      .then(([currentUser, cards]) => {
-        setCurrentUser(currentUser);
-        setCards(cards);
+    if (loggedIn) {
+      api
+      .getAllCards()
+      .then((data) => {
+        setCards(data);
       })
       .catch((error) => console.log(`ошибка: ${error}`));
-  }}, [ loggedIn])
+    }
+   
+  }, [loggedIn]);
+
   //сохраняем токен в локальном хранилище
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      authMesto.getContent(jwt).then((res) => {
-          if (res) {
-              setLoggedIn(true);
-              setEmail(res.email);
-          }
-      })
-      .catch((error) => {
-        localStorage.removeItem("jwt");
-        console.log(error);
-      })
+    const token = localStorage.getItem("token");
+
+    if (localStorage.getItem("token")) {
+      auth(token);
     }
   }, []);
 
@@ -103,16 +70,30 @@ function App() {
     if (loggedIn) navigate("/");
   }, [loggedIn, navigate]);
 
+  // функция проверки токена пользователя
+  const auth = async (token) => {
+    return authMesto.getContent(token).then((res) => {
+      if (res) {
+        setLoggedIn(true);
+        setCurrentUser({
+          email: res.data.email,
+          _id: res.data._id,
+        });
+      }
+    }).catch((error) => console.log(`ошибка: ${error}`));
+  };
+
+  
+
   //функция регистрации пользователя
-  const onRegister = (email, password) => {
-      authMesto
-      .register({email, password})
+  const onRegister = ({ password, email }) => {
+    return authMesto
+      .register(password, email)
       .then((res) => {
-        setEmail(res.email);
         setIsTooltipStatus("successfully");
         setIsTooltipOpened(true);
-        navigate("/sign-in");
-        // return res;
+        navigate("/sign-in", { replace: true });
+        return res;
       })
       .catch((error) => {
         console.log(`ошибка: ${error}`);
@@ -128,16 +109,15 @@ function App() {
   };
 
   //функция для входа пользователя
-  const onLogin = (email, password) => {
+  const onLogin = ({ password, email }) => {
     return authMesto
-      .authorize(email, password)
+      .authorize(password, email)
       .then((res) => {
-        localStorage.setItem("jwt", res.token);
-          setEmail(email);
+        if (res.token) {
           setLoggedIn(true);
-          localStorage.setItem("userId");
+          localStorage.setItem("token", res.token);
           navigate("/", { replace: true });
-        
+        }
       })
       .catch((error) => {
         console.log(`ошибка: ${error}`);
@@ -154,7 +134,7 @@ function App() {
 
   //функция для выхода пользователя из приложения
   const onSignOut = () => {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     setLoggedIn(false);
     navigate("/sign-in");
   };
@@ -162,7 +142,7 @@ function App() {
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((id) => id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api

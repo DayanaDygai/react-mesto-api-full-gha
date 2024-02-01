@@ -9,7 +9,7 @@ function Register({ onRegister }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onRegister(email, password)
+    onRegister({ password, email })
   };
 
   return (

@@ -18,8 +18,8 @@ export class Api {
   //изменение информации о пользователе с сервера
   setUserInfo(data) {
     return this._makeRequest(`${this._url}/users/me`, {
-      method: "PATCH",
       credentials: "include",
+      method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -32,8 +32,8 @@ export class Api {
   //получение информации о пользователе с сервера
   getUserInfo() {
     return this._makeRequest(`${this._url}/users/me`, {
-      method: "GET",
       credentials: "include",
+      method: "GET",
       headers: this._headers,
     });
   }
@@ -41,8 +41,8 @@ export class Api {
   //редактировать аватар
   editAvatar(data) {
     return this._makeRequest(`${this._url}/users/me/avatar`, {
-      method: "PATCH",
       credentials: "include",
+      method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -55,8 +55,8 @@ export class Api {
   //метод получения карточек с сервера
   getAllCards() {
     return this._makeRequest(`${this._url}/cards`, {
-      method: "GET",
       credentials: "include",
+      method: "GET",
       headers: this._headers,
     });
   }
@@ -64,8 +64,8 @@ export class Api {
   //добавление новой карточки
   createCard(data) {
     return this._makeRequest(`${this._url}/cards`, {
-      method: "POST",
       credentials: "include",
+      method: "POST",
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -77,24 +77,24 @@ export class Api {
   //удаление карточки
   delete(id) {
     return this._makeRequest(`${this._url}/cards/${id}`, {
-      method: "DELETE",
       credentials: "include",
+      method: "DELETE",
       headers: this._headers,
     });
   }
 
   deleteLike(id) {
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
-      method: "DELETE",
       credentials: "include",
+      method: "DELETE",
       headers: this._headers,
     });
   }
 
   addLike(id) {
     return this._makeRequest(`${this._url}/cards/${id}/likes`, {
-      method: "PUT",
       credentials: "include",
+      method: "PUT",
       headers: this._headers,
     });
   }
@@ -104,13 +104,10 @@ export class Api {
   }
 }
 
-// const token = localStorage.getItem('jwt');
-
 const api = new Api({
-  url:"https://api.daianamesto.students.nomoredomainsmonster.ru",
+  url: "https://api.daianamesto.students.nomoredomainsmonster.ru",
   headers: {
-    'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json'
   },
 });
 

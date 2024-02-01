@@ -28,24 +28,6 @@ const STATUS_OK_CREATED = 201;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 const SOLT_ROUND = 10;
 
-// export const login = async (req, res, next) => {
-//   try {
-//     const { email, password } = req.body;
-//     const user = await User.findOne({ email }).select('+password');
-//     if (!user) {
-//       throw new NotAuthenticateError('Не верные логин или пароль');
-//     }
-//     const matched = await bcrypt.compare(password, user.password);
-//     if (!matched) {
-//       throw new NotAuthenticateError('Не верные логин или пароль');
-//     }
-//     const token = generateToken({ _id: user._id });
-//     return res.status(STATUS_OK).send({ token });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -58,11 +40,7 @@ export const login = async (req, res, next) => {
       throw new NotAuthenticateError('Не верные логин или пароль');
     }
     const token = generateToken({ _id: user._id });
-    return res.cookie('jwt', token, {
-      maxAge: 3600000,
-      httpOnly: true,
-      sameSite: true,
-    }).send(user.toJSON());
+    return res.status(STATUS_OK).send({ token });
   } catch (error) {
     return next(error);
   }
@@ -107,7 +85,13 @@ export const createUser = async (req, res, next) => {
       about: req.body.about,
       avatar: req.body.avatar,
     });
-    return res.status(STATUS_OK_CREATED).send(newUser);
+    return res.status(STATUS_OK_CREATED).send({
+      _id: newUser._id,
+      name: newUser.name,
+      about: newUser.about,
+      avatar: newUser.avatar,
+      email: newUser.email,
+    });
   } catch (error) {
     if (error.code === MONGO_DUPLICATE_ERROR_CODE) {
       return next(new ConflictError('Такой пользователь уже существует'));
@@ -127,7 +111,7 @@ export const editInfoUser = async (req, res, next) => {
       { name, about },
       { new: true, runValidators: true },
     ).orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send(user);
+    return res.status(STATUS_OK).send({ name: user.name, about: user.about });
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь не найден'));
@@ -165,7 +149,7 @@ export const getMyProfile = async (req, res, next) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
-    return res.status(STATUS_OK).send(user);
+    return res.status(STATUS_OK).send({ data: user });
   } catch (error) {
     return next(error);
   }
