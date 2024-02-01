@@ -63,7 +63,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (loggedIn) navigate("/");
+    if (loggedIn) navigate("/", { replace: true });
   }, [loggedIn, navigate]);
 
   // функция проверки токена пользователя
@@ -88,7 +88,7 @@ function App() {
         if (res) {
           setIsTooltipStatus("successfully");
           setIsTooltipOpened(true);
-          navigate("/sign-in");
+          navigate("/sign-in", { replace: true });
         }
         // return res;
       })
@@ -115,7 +115,7 @@ function App() {
           setLoggedIn(true);
           setEmail(email);
           localStorage.setItem("token", res.token);
-          navigate("/");
+          navigate("/", { replace: true });
         }
       } catch (error) {
         console.log(`ошибка: ${error}`);

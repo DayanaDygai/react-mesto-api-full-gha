@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from "react";
 import { Link} from "react-router-dom";
 import styles from "./Register.module.css";
@@ -9,7 +10,10 @@ function Register({ onRegister }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onRegister(password, email)
+    onRegister(password, email).then(() => {
+      navigate("/sign-in");
+      console.log(onRegister);
+    });
   };
 
   return (

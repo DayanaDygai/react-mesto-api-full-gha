@@ -1,5 +1,5 @@
 export class Api {
-  constructor({ url, headers }) {
+  constructor({ url}) {
     this._url = url;
     this.changeLikeCardStatus = this.changeLikeCardStatus.bind(this);
   }
