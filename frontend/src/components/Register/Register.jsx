@@ -7,13 +7,9 @@ function Register({ onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    onRegister(password, email).then(() => {
-      navigate("/sign-in");
-      console.log(onRegister);
-    });
+    onRegister(email, password);
   };
 
   return (
