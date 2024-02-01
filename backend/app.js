@@ -41,7 +41,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('/', router);
+app.use(router);
 
 app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
 
