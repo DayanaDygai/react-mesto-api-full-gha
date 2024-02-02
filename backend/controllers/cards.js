@@ -16,7 +16,7 @@ const STATUS_OK_CREATED = 201;
 export const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
-    return res.status(STATUS_OK).send(cards);
+    return res.status(STATUS_OK).send([cards]);
   } catch (error) {
     return next(error);
   }
