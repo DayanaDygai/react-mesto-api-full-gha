@@ -45,8 +45,8 @@ export const createCard = async (req, res, next) => {
 
 export const deleteCardById = async (req, res, next) => {
   try {
-    const { cardId } = req.params;
-    const card = await Card.findById(cardId).populate(['likes', 'owner']);
+    // const { cardId } = req.params;
+    const card = await Card.findById(req.params.cardId);
     if (!card) {
       throw new NotFoundError('Карточки с указанным ID не существует');
     }
@@ -70,8 +70,7 @@ export const likeCard = async (req, res, next) => {
       cardId,
       { $addToSet: { likes: req.user._id } },
       { new: true },
-    ).populate(['likes', 'owner'])
-      .orFail(() => new Error('NotFoundError'));
+    ).orFail(() => new Error('NotFoundError'));
     return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.message === 'NotFoundError') {

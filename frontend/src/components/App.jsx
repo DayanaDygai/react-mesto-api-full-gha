@@ -140,7 +140,7 @@ function App() {
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((id) => id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
@@ -158,7 +158,7 @@ function App() {
     api
       .delete(card._id)
       .then(() => {
-        setCards((cards) => cards.filter((c) => c._id !== card._id));
+        setCards((state) => state.filter((c) => c._id !== card._id));
       })
       .catch((error) => console.log(`ошибка: ${error}`));
   };
