@@ -16,7 +16,7 @@ const STATUS_OK_CREATED = 201;
 export const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
-    return res.status(STATUS_OK).send([cards]);
+    return res.status(STATUS_OK).send(cards);
   } catch (error) {
     return next(error);
   }
@@ -54,7 +54,7 @@ export const deleteCardById = async (req, res, next) => {
       throw new ForibiddenError('Нет прав для удаления карточки');
     }
     await Card.deleteOne(req.params);
-    return res.status(STATUS_OK).send({ message: 'Карточка успешно удалена' });
+    return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.name === 'CastError') {
       return next(new IncorrectDataError('Указан некорретный ID'));
