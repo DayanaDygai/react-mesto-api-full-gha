@@ -49,7 +49,6 @@ export class Api {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
         authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({

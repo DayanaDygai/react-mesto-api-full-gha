@@ -25,7 +25,10 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.use(requestLogger);
 app.use(cors);
@@ -41,7 +44,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('/', router);
+app.use(router);
 
 app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
 
