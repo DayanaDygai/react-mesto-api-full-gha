@@ -158,7 +158,7 @@ function App() {
     api
       .delete(card._id)
       .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
+        setCards((cards) => cards.filter((c) => c._id !== card._id));
       })
       .catch((error) => console.log(`ошибка: ${error}`));
   };
@@ -195,9 +195,9 @@ function App() {
   };
 
   //функция для изменения аватара
-  const handleUpdateAvatar = (avatar) => {
+  const handleUpdateAvatar = (avatarUrl) => {
     api
-      .editAvatar(avatar)
+      .editAvatar(avatarUrl.avatar)
       .then((res) => {
         setCurrentUser({ ...currentUser, avatar: res.avatar });
         closeAllPopups();
