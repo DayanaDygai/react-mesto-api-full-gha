@@ -158,7 +158,7 @@ function App() {
     api
       .delete(card._id)
       .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
+        setCards((cards) => cards.filter((c) => c._id !== card._id));
       })
       .catch((error) => console.log(`ошибка: ${error}`));
   };
@@ -198,8 +198,8 @@ function App() {
   const handleUpdateAvatar = (avatar) => {
     api
       .editAvatar(avatar)
-      .then((newAvatar) => {
-        setCurrentUser(newAvatar);
+      .then((res) => {
+        setCurrentUser({ ...currentUser, avatar: res.avatar });
         closeAllPopups();
       })
       .catch((error) => console.log(`ошибка: ${error}`));
