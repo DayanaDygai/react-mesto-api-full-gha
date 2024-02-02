@@ -34,8 +34,8 @@ function App() {
     if (loggedIn) {
       api
         .getUserInfo()
-        .then((userData) => {
-          setCurrentUser(userData);
+        .then((data) => {
+          setCurrentUser(data);
         })
         .catch((error) => console.log(`ошибка: ${error}`));
     }
@@ -146,8 +146,8 @@ function App() {
     api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
-        setCards((cards) =>
-        cards.map((c) => (c._id === card._id ? newCard : c)),
+        setCards((state) =>
+        state.map((c) => (c._id === card._id ? newCard : c)),
         );
       })
       .catch((error) => console.log(`ошибка: ${error}`));
@@ -158,7 +158,7 @@ function App() {
     api
       .delete(card._id)
       .then(() => {
-        setCards((cards) => cards.filter((c) => c._id !== card._id));
+        setCards((state) => state.filter((c) => c._id !== card._id));
       })
       .catch((error) => console.log(`ошибка: ${error}`));
   };

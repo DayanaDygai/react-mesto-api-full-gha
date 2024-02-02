@@ -50,6 +50,7 @@ function Main({
       <section className="cards">
         <div className="cards__conteiner">
           {cards.map((card) => {
+            console.log(cards);
             return (
               <Card
                 card={card}

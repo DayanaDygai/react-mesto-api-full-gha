@@ -42,7 +42,7 @@ export class Api {
   }
 
   //редактировать аватар
-  editAvatar(avatar) {
+  editAvatar(avatarUrl) {
     const token =localStorage.getItem('jwt');
     return fetch(`${this._url}/users/me/avatar`, {
       credentials: "include",
@@ -53,7 +53,7 @@ export class Api {
         authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        avatar
+        avatar: avatarUrl,
       }),
     });
   }
@@ -113,7 +113,7 @@ export class Api {
 
   addLike(id) {
     const token = localStorage.getItem('jwt');
-    return fetch(`${this._url}/cards/${id}/likes`, {
+    return this._makeRequest(`${this._url}/cards/${id}/likes`, {
       credentials: "include",
       method: "PUT",
       headers: {

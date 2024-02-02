@@ -13,9 +13,11 @@ const STATUS_OK = 200;
 const STATUS_OK_CREATED = 201;
 // запрос выполнен и создан новый ресурс
 
+let cards = [];
+
 export const getCards = async (req, res, next) => {
   try {
-    const cards = await Card.find({});
+    cards = await Card.find({});
     return res.status(STATUS_OK).send(cards);
   } catch (error) {
     return next(error);
