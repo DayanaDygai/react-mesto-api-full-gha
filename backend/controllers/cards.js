@@ -85,9 +85,8 @@ export const likeCard = async (req, res, next) => {
 
 export const deleteLikeCard = async (req, res, next) => {
   try {
-    const { cardId } = req.params;
     const card = await Card.findByIdAndUpdate(
-      cardId,
+      req.params.cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
     ).orFail(() => new Error('NotFoundError'));
