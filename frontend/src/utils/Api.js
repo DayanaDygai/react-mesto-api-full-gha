@@ -4,20 +4,18 @@ export class Api {
     this.changeLikeCardStatus = this.changeLikeCardStatus.bind(this);
   }
 
-  _makeRequest(url, options) {
-    return fetch(url, options).then((res) => {
+  _makeRequest(res) {
       if (res.ok) {
         return res.json();
       }
 
       return Promise.reject();
-    });
   }
 
   //изменение информации о пользователе с сервера
   setUserInfo(name, about) {
     const token =localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/users/me`, {
+    return fetch(`${this._url}/users/me`, {
       credentials: "include",
       method: "PATCH",
       headers: {
@@ -34,7 +32,7 @@ export class Api {
   //получение информации о пользователе с сервера
   getUserInfo() {
     const token =localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/users/me`, {
+    return fetch(`${this._url}/users/me`, {
       credentials: "include",
       method: "GET",
       headers: {
@@ -44,9 +42,9 @@ export class Api {
   }
 
   //редактировать аватар
-  editAvatar(avatarUrl) {
+  editAvatar(avatar) {
     const token =localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/users/me/avatar`, {
+    return fetch(`${this._url}/users/me/avatar`, {
       credentials: "include",
       method: "PATCH",
       headers: {
@@ -55,7 +53,7 @@ export class Api {
         authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        avatar: avatarUrl,
+        avatar
       }),
     });
   }
@@ -63,7 +61,7 @@ export class Api {
   //метод получения карточек с сервера
   getAllCards() {
     const token =localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/cards`, {
+    return fetch(`${this._url}/cards`, {
       credentials: "include",
       method: "GET",
       headers: {
@@ -75,7 +73,7 @@ export class Api {
   //добавление новой карточки
   createCard({name, link}) {
     const token =localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/cards`, {
+    return fetch(`${this._url}/cards`, {
       credentials: "include",
       method: "POST",
       headers: {
@@ -92,7 +90,7 @@ export class Api {
   //удаление карточки
   delete(id) {
     const token = localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/cards/${id}`, {
+    return fetch(`${this._url}/cards/${id}`, {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -104,7 +102,7 @@ export class Api {
 
   deleteLike(id) {
     const token = localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/cards/${id}/likes`, {
+    return fetch(`${this._url}/cards/${id}/likes`, {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -115,7 +113,7 @@ export class Api {
 
   addLike(id) {
     const token = localStorage.getItem('jwt');
-    return this._makeRequest(`${this._url}/cards/${id}/likes`, {
+    return fetch(`${this._url}/cards/${id}/likes`, {
       credentials: "include",
       method: "PUT",
       headers: {

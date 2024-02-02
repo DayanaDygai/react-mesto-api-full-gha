@@ -198,8 +198,8 @@ function App() {
   const handleUpdateAvatar = (avatar) => {
     api
       .editAvatar(avatar)
-      .then((res) => {
-        setCurrentUser({ ...currentUser, avatar: res.avatar });
+      .then((newAvatar) => {
+        setCurrentUser(newAvatar);
         closeAllPopups();
       })
       .catch((error) => console.log(`ошибка: ${error}`));
