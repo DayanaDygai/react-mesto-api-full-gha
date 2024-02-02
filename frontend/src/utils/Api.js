@@ -66,6 +66,7 @@ export class Api {
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
   }

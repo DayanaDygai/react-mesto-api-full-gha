@@ -230,7 +230,20 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Header userEmail={isEmail} onSignOut={onSignOut} />
         <Routes>
-          <Route
+        <Route path="/" element= {
+            <ProtectedRoute
+                    loggedIn={loggedIn}
+                    component= {Main} 
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    cards={cards}
+                    onCardDelete={handleCardDelete} />
+          }
+        />
+          {/* <Route
             path="/"
             element={
               <ProtectedRoute loggedIn={loggedIn}>
@@ -245,7 +258,7 @@ function App() {
                 ></Main>
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/sign-up"
             element={<Register onRegister={onRegister} />}
