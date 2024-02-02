@@ -51,4 +51,3 @@ export const getContent = () => {
     },
   }).then(getResponseData);
 };
-

@@ -49,9 +49,7 @@ function Main({
       </section>
       <section className="cards">
         <div className="cards__conteiner">
-          {cards.map((card) => {
-            console.log(cards);
-            return (
+          {cards.map((card) => (
               <Card
                 card={card}
                 key={card._id}
@@ -59,8 +57,8 @@ function Main({
                 onCardLike={onCardLike}
                 onCardDelete={onCardDelete}
               />
-            );
-          })}
+            )
+          )}
         </div>
       </section>
     </main>

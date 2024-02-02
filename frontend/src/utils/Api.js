@@ -4,18 +4,20 @@ export class Api {
     this.changeLikeCardStatus = this.changeLikeCardStatus.bind(this);
   }
 
-  _makeRequest(res) {
+  _makeRequest(url, options) {
+    return fetch(url, options).then((res) => {
       if (res.ok) {
         return res.json();
       }
 
       return Promise.reject();
+    });
   }
 
   //изменение информации о пользователе с сервера
   setUserInfo(name, about) {
     const token =localStorage.getItem('jwt');
-    return fetch(`${this._url}/users/me`, {
+    return this._makeRequest(`${this._url}/users/me`, {
       credentials: "include",
       method: "PATCH",
       headers: {
@@ -32,7 +34,7 @@ export class Api {
   //получение информации о пользователе с сервера
   getUserInfo() {
     const token =localStorage.getItem('jwt');
-    return fetch(`${this._url}/users/me`, {
+    return this._makeRequest(`${this._url}/users/me`, {
       credentials: "include",
       method: "GET",
       headers: {
@@ -44,11 +46,12 @@ export class Api {
   //редактировать аватар
   editAvatar(avatarUrl) {
     const token =localStorage.getItem('jwt');
-    return fetch(`${this._url}/users/me/avatar`, {
+    return this._makeRequest(`${this._url}/users/me/avatar`, {
       credentials: "include",
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
@@ -60,12 +63,11 @@ export class Api {
   //метод получения карточек с сервера
   getAllCards() {
     const token =localStorage.getItem('jwt');
-    return fetch(`${this._url}/cards`, {
+    return this._makeRequest(`${this._url}/cards`, {
       credentials: "include",
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     });
   }
@@ -73,7 +75,7 @@ export class Api {
   //добавление новой карточки
   createCard({name, link}) {
     const token =localStorage.getItem('jwt');
-    return fetch(`${this._url}/cards`, {
+    return this._makeRequest(`${this._url}/cards`, {
       credentials: "include",
       method: "POST",
       headers: {
@@ -90,7 +92,7 @@ export class Api {
   //удаление карточки
   delete(id) {
     const token = localStorage.getItem('jwt');
-    return fetch(`${this._url}/cards/${id}`, {
+    return this._makeRequest(`${this._url}/cards/${id}`, {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -102,7 +104,7 @@ export class Api {
 
   deleteLike(id) {
     const token = localStorage.getItem('jwt');
-    return fetch(`${this._url}/cards/${id}/likes`, {
+    return this._makeRequest(`${this._url}/cards/${id}/likes`, {
       credentials: "include",
       method: "DELETE",
       headers: {

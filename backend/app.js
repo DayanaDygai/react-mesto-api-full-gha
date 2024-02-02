@@ -25,10 +25,7 @@ dotenv.config();
 // eslint-disable-next-line import/first
 
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(requestLogger);
 app.use(cors);

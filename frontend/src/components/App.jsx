@@ -55,7 +55,7 @@ function App() {
 
   //сохраняем токен в локальном хранилище
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("jwt");
 
     if (token) {
       auth(token);
@@ -114,8 +114,8 @@ function App() {
           getContent(res.token);
           setLoggedIn(true);
           setEmail(email);
-          localStorage.setItem("token", res.token);
-          navigate("/", { replace: true });
+          // localStorage.setItem("loggedIn", true);
+          navigate("/");
         }
       } catch (error) {
         console.log(`ошибка: ${error}`);
@@ -140,7 +140,7 @@ function App() {
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((id) => id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
@@ -243,22 +243,6 @@ function App() {
                     onCardDelete={handleCardDelete} />
           }
         />
-          {/* <Route
-            path="/"
-            element={
-              <ProtectedRoute loggedIn={loggedIn}>
-                <Main
-                  onEditAvatar={handleEditAvatarClick}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                  cards={cards}
-                ></Main>
-              </ProtectedRoute>
-            }
-          /> */}
           <Route
             path="/sign-up"
             element={<Register onRegister={onRegister} />}

@@ -13,11 +13,9 @@ const STATUS_OK = 200;
 const STATUS_OK_CREATED = 201;
 // запрос выполнен и создан новый ресурс
 
-let cards = [];
-
 export const getCards = async (req, res, next) => {
   try {
-    cards = await Card.find({});
+    const cards = await Card.find({});
     return res.status(STATUS_OK).send(cards);
   } catch (error) {
     return next(error);
@@ -56,7 +54,7 @@ export const deleteCardById = async (req, res, next) => {
       throw new ForibiddenError('Нет прав для удаления карточки');
     }
     await Card.deleteOne(req.params);
-    return res.status(STATUS_OK).send(card);
+    return res.status(STATUS_OK).send({ message: 'Карточка успешно удалена' });
   } catch (error) {
     if (error.name === 'CastError') {
       return next(new IncorrectDataError('Указан некорретный ID'));
@@ -93,7 +91,8 @@ export const deleteLikeCard = async (req, res, next) => {
       cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
-    ).orFail(() => new Error('NotFoundError'));
+    ).populate(['likes', 'owner'])
+      .orFail(() => new Error('NotFoundError'));
     return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.message === 'NotFoundError') {
