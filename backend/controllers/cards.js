@@ -53,7 +53,7 @@ export const deleteCardById = async (req, res, next) => {
     if (card.owner.toString() !== req.user._id) {
       throw new ForibiddenError('Нет прав для удаления карточки');
     }
-    await Card.deleteOne(req.params);
+    await card.deleteOne(req.params);
     return res.status(STATUS_OK).send({ message: 'Карточка успешно удалена' });
   } catch (error) {
     if (error.name === 'CastError') {
@@ -91,8 +91,7 @@ export const deleteLikeCard = async (req, res, next) => {
       cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
-    ).populate(['likes', 'owner'])
-      .orFail(() => new Error('NotFoundError'));
+    ).orFail(() => new Error('NotFoundError'));
     return res.status(STATUS_OK).send(card);
   } catch (error) {
     if (error.message === 'NotFoundError') {

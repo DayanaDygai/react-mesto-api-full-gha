@@ -34,8 +34,8 @@ function App() {
     if (loggedIn) {
       api
         .getUserInfo()
-        .then((data) => {
-          setCurrentUser(data);
+        .then((userData) => {
+          setCurrentUser(userData);
         })
         .catch((error) => console.log(`ошибка: ${error}`));
     }
@@ -55,7 +55,7 @@ function App() {
 
   //сохраняем токен в локальном хранилище
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("token");
 
     if (token) {
       auth(token);
@@ -114,8 +114,8 @@ function App() {
           getContent(res.token);
           setLoggedIn(true);
           setEmail(email);
-          // localStorage.setItem("loggedIn", true);
-          navigate("/");
+          localStorage.setItem("token", res.token);
+          navigate("/", { replace: true });
         }
       } catch (error) {
         console.log(`ошибка: ${error}`);
@@ -140,14 +140,14 @@ function App() {
   //функция для постановки лайка
   const handleCardLike = (card) => {
     // проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
         setCards((state) =>
-        state.map((c) => (c._id === card._id ? newCard : c)),
+          state.map((c) => (c._id === card._id ? newCard : c)),
         );
       })
       .catch((error) => console.log(`ошибка: ${error}`));
@@ -230,19 +230,22 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Header userEmail={isEmail} onSignOut={onSignOut} />
         <Routes>
-        <Route path="/" element= {
-            <ProtectedRoute
-                    loggedIn={loggedIn}
-                    component= {Main} 
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onEditAvatar={handleEditAvatarClick}
-                    onCardClick={handleCardClick}
-                    onCardLike={handleCardLike}
-                    cards={cards}
-                    onCardDelete={handleCardDelete} />
-          }
-        />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute loggedIn={loggedIn}>
+                <Main
+                  onEditAvatar={handleEditAvatarClick}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                  cards={cards}
+                ></Main>
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/sign-up"
             element={<Register onRegister={onRegister} />}

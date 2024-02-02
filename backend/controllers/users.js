@@ -124,12 +124,13 @@ export const editInfoUser = async (req, res, next) => {
 
 export const editAvatarUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(
+    const { avatar } = req.body;
+    const updateAvatar = await User.findByIdAndUpdate(
       req.user._id,
-      { avatar: req.body.avatar },
+      { avatar },
       { new: 'true', runValidators: true },
     ).orFail(() => new Error('NotFoundError'));
-    return res.status(STATUS_OK).send(user);
+    return res.status(STATUS_OK).send(updateAvatar);
   } catch (error) {
     if (error.message === 'NotFoundError') {
       return next(new NotFoundError('Пользователь не найден'));
